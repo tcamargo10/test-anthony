@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../../components/button/styles';
 import { Input } from '../../components/Input';
 import { apiGateway } from '../../service/api';
@@ -9,10 +9,17 @@ import * as S from './styles';
 
 export default function Home() {
     const [avatar, setAvatar] = useState('');
+    const [user, setUser] = useState({
+        name: '',
+        email: '',
+        job: '',
+    });
     
-    const handleAvatar = (event) => {
-        const objectUrl = URL.createObjectURL(event?.target?.files[0]);
-        setAvatar(objectUrl);
+    const handleAvatar = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event?.target?.files?.[0]) {
+            const objectUrl = URL.createObjectURL(event?.target?.files[0]);
+            setAvatar(objectUrl);
+        }
     }
 
     const handleSaveUser = (event: React.FormEvent<HTMLFormElement>) => {
@@ -20,9 +27,9 @@ export default function Home() {
 
         try{
             apiGateway.post('/my-form', {
-                name: '',
-                email: '',
-                job: '',
+                name: user.name,
+                email: user.email,
+                job: user.job,
             })
         } catch (error) {
             alert('Error! Try again.');
@@ -49,9 +56,25 @@ export default function Home() {
                 </div>
 
                 <div className="inputs-area">
-                    <Input name="name" label="Full Name"/>
-                    <Input name="email" label="Email"/>
-                    <Input name="job" label="Job Title"/>
+                    <Input 
+                        name="name" 
+                        label="Full Name" 
+                        value={user.name} 
+                        onChange={(event) => setUser(prevState => ({...prevState, name: event.target.value}))} 
+                    />
+                     <Input 
+                        name="email" 
+                        label="Email" 
+                        type="email"
+                        value={user.email} 
+                        onChange={(event) => setUser(prevState => ({...prevState, email: event.target.value}))} 
+                    />
+                     <Input 
+                        name="job" 
+                        label="Job Title" 
+                        value={user.job} 
+                        onChange={(event) => setUser(prevState => ({...prevState, job: event.target.value}))} 
+                    />
                 </div>
 
                 <div className="footer">
