@@ -9,6 +9,7 @@ import * as S from './styles';
 
 export default function Home() {
     const [avatar, setAvatar] = useState('');
+    const [inputRequired, setInputRequired] = useState(false);
     const [user, setUser] = useState({
         name: '',
         email: '',
@@ -25,11 +26,25 @@ export default function Home() {
     const handleSaveUser = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
+        if(!user.name || !user.email || !user.job) {
+            setInputRequired(true);
+
+            console.log(!!user.job && inputRequired);
+            
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', user.name);
+        formData.append('email', user.email);
+        formData.append('job', user.job);
+        formData.append('photo', avatar);
+
         try{
-            apiGateway.post('/my-form', {
-                name: user.name,
-                email: user.email,
-                job: user.job,
+            apiGateway.post('/my-form', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
             })
         } catch (error) {
             alert('Error! Try again.');
@@ -61,6 +76,7 @@ export default function Home() {
                         label="Full Name" 
                         value={user.name} 
                         onChange={(event) => setUser(prevState => ({...prevState, name: event.target.value}))} 
+                        error={user.name === '' && inputRequired}
                     />
                      <Input 
                         name="email" 
@@ -68,12 +84,14 @@ export default function Home() {
                         type="email"
                         value={user.email} 
                         onChange={(event) => setUser(prevState => ({...prevState, email: event.target.value}))} 
+                        error={user.email === '' && inputRequired}
                     />
                      <Input 
                         name="job" 
                         label="Job Title" 
                         value={user.job} 
                         onChange={(event) => setUser(prevState => ({...prevState, job: event.target.value}))} 
+                        error={user.job === '' && inputRequired}
                     />
                 </div>
 

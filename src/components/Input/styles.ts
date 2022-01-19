@@ -7,8 +7,7 @@ export const Container = styled.div`
 
   label {
       font-size: 1rem;
-      font-weight: bold;
-      margin-bottom: 2px;
+      font-weight: bold;      
   }
 
   input {
@@ -16,7 +15,19 @@ export const Container = styled.div`
       padding: 20px;
       border: 2px solid #D1D5DB;
       border-radius: 4px;
-      margin-bottom: 20px;
       font-size: 1rem;
+      margin-top: 4px;
+  }
+
+  span {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: #6B7280;
+  }
+
+  .label-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 `;
